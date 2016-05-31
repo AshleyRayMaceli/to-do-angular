@@ -1,13 +1,31 @@
 import { Component } from 'angular2/core';
 
 @Component({
-  selector: 'my-app',
+  selector: 'task-list',
+  inputs: ['taskList'],
   template: `
-      <div class="container">
-        <h1>To-Do List</h1>
-        <h3 *ngFor="#task of tasks">{{ task.description }}</h3>
-      </div>
-    `
+  <h3 *ngFor="#currentTask of taskList" (click)="taskClicked(currentTask)">
+    {{ currentTask.description }}
+  </h3>
+  `
+})
+
+export class TaskListComponent {
+  public taskList: Task[];
+  taskClicked(clickedTask: Task): void {
+    console.log(clickedTask);
+  }
+}
+
+@Component({
+  selector: 'my-app',
+  directives: [TaskListComponent],
+  template: `
+    <div class="container">
+      <h1>To-Do List</h1>
+      <task-list [taskList]="tasks"></task-list>
+    </div>
+  `
 })
 
 export class AppComponent {
@@ -19,6 +37,9 @@ export class AppComponent {
       new Task("Rewatch all the Lord of the Rings movies.", 2),
       new Task("Do the laundry.", 3)
     ];
+  }
+  taskWasSelected(clickedTask: Task): void {
+    console.log(clickedTask);
   }
 }
 
